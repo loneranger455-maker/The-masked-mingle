@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+    --primarycolor:#1AEBB6;
+    --secondarycolor:#f1f0f0;
+}
+
+/* width */
+::-webkit-scrollbar {
+    display: none;
+  }
+  
