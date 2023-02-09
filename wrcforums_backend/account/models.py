@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 from django.contrib.postgres.fields import ArrayField
-import datetime
+import datetime,uuid
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -80,6 +80,7 @@ class Notifications(models.Model):
 
 
 class Forums(models.Model):
+    forumid=models.UUIDField(unique=True,default=uuid.uuid4,primary_key=True)
     admin=models.ForeignKey(User, on_delete=models.CASCADE)
     forum_name=models.CharField(max_length=100,unique=True)
     image=models.ImageField(default=None)
@@ -93,7 +94,7 @@ class Forums(models.Model):
 class UserProfile(models.Model):
     user_instance=models.OneToOneField(User,on_delete=models.CASCADE)
     joined_forums=ArrayField(models.CharField(max_length=100),null=True)
-    user_profile_picture=models.ImageField(upload_to="profile_pictures/",default='user-profile-icon.png')
+    user_profile_picture=models.ImageField(upload_to="profile_pictures/",default='profile_pictures/user-profile-icon.png')
     recent_interactions=ArrayField(ArrayField(models.CharField(max_length=200),size=2,null=True),null=True)
 
 
@@ -107,12 +108,15 @@ class Notice(models.Model):
 class Posts(models.Model):
     forum=models.ForeignKey(Forums,on_delete=models.CASCADE)
     posted_by=models.ForeignKey(User,on_delete=models.CASCADE)
-    comments=ArrayField(ArrayField(models.CharField(max_length=100),size=2),default=None)
+    comments=ArrayField(ArrayField(models.CharField(max_length=100),size=2),default=list)
     likes=models.IntegerField(default=0)
 
 class Content(Posts):
+    postid=models.UUIDField(unique=True,default=uuid.uuid4,primary_key=True)
     title=models.CharField(max_length=200)
     contentvalue=models.TextField()
     link=models.CharField(max_length=200,default="",blank=True)
     post_type=models.CharField(max_length=200,blank=True)
+    def __str__(self):
+        return str(self.postid)
 

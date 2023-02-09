@@ -19,7 +19,8 @@ function Sidebar(props) {
  
   
   return (
-<div className='w-1/5 h-screen  bg-[#1AEBB6] shadow-xl mix-blend-multiply hover:mix-blend-overlay" shadow-black'>
+    <div className='w-1/5 h-screen '>
+<div className='w-1/5 h-screen  fixed bg-[#1AEBB6] shadow-xl mix-blend-multiply hover:mix-blend-overlay" shadow-black'>
            
             <div className='flex flex-col justify-center items-center pt-8'>
                 <div>
@@ -36,13 +37,13 @@ function Sidebar(props) {
               <button onClick={()=>navigate('/dashboard')} style={{color:`${colors.home}`}} className='shadow-md  p-4 w-[90%] text-center'>Home</button>
               <button onClick={()=>navigate('/dashboard/findforums')} style={{color:`${colors.findforums}`}} className='shadow-md  p-4 w-[90%] text-center'>Find Forums</button>
               <button onClick={()=>navigate('/dashboard/notice')} style={{color:`${colors.notice}`}} className='shadow-md  p-4 w-[90%] text-center'>Notices</button>
-              <button onClick={()=>navigate('/dashboard/activities')} style={{color:`${colors.activities}`}} className='shadow-md  p-4 w-[90%] text-center'>Activities</button>
-              <button onClick={()=>navigate('/dashboard/settings')} style={{color:`${colors.settings}`}} className='shadow-md  p-4 w-[90%] text-center'>Settings</button>
+              <button onClick={()=>navigate('/dashboard/activities')} style={{color:`${colors.activities}`}} className='shadow-md  p-4 w-[90%] text-center'>Profile</button>
 
             </div>
             
 
         </div> 
+        </div>
     )
 }
 

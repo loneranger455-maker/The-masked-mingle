@@ -1,9 +1,11 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { GetToken } from "../../../services/Localstorageservice";
+import { useNavigate } from "react-router";
 
 function Createpost() {
     const [joinedforums,setJoinedForums]=useState([])
+    const navigate=useNavigate()
     const {access}=GetToken()
     useEffect(()=>{
 
@@ -21,10 +23,11 @@ function Createpost() {
     e.preventDefault()
     const formdata=new FormData(e.target)
 
-    axios.post('http://127.0.0.1:8000/api/user/post/',formdata,{headers:{
+    axios.post('http://127.0.0.1:8000/api/user/allposts/',formdata,{headers:{
         "authorization":`Bearer ${access}`
       }}).then((response)=>{
       console.log(response)
+      navigate('/dashboard/activities')
       }
       )
       .catch((err)=>console.log(err))

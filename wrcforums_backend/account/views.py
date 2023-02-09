@@ -5,9 +5,12 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from .models import *
 from .serializers import *
+from .public_fuctions import get_profile_image_for_comment
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from .renderers import UserRenderer
+import json
+from .UUIDEncoder import UUIDEncoder,popstate
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -48,7 +51,7 @@ class LoginAuthenticationViews(APIView):
             
 
             if user is not None:
-                if user.password==password:
+                if user.check_password(password):
                     token=get_tokens_for_user(user)
                     
                     return Response({"token":token,"username":user.username,"msg":"user registration sucessfull"},status=status.HTTP_200_OK)
@@ -105,12 +108,37 @@ class NoticeViews(APIView):
     permission_classes=[IsAuthenticated]
     def get(self,request):
         objects=Notice.objects.all()
-        serializer=NoticeSerializer(objects,many=True)
-        return Response(serializer.data)
+        Notice_Array=[{"notice_for":i.notice_for.forum_name,"notice_data":i.notice_data} for i in objects]
+      
+        return Response(Notice_Array)
 
 class PostView(APIView):
     renderer_classes=[UserRenderer]
     permission_classes=[IsAuthenticated]
+ 
+    def get(self,request,pk):
+        serializeddata=Content.objects.get(postid=pk)
+        username=serializeddata.posted_by.username
+        serializeddata=UUIDEncoder(serializeddata.__dict__)
+        serializeddata["comments"]=get_profile_image_for_comment(serializeddata["comments"])
+        serializeddata.update({"username":username})
+        
+        
+
+        return Response(serializeddata)
+
+class GetPostsView(APIView):
+    def get(self,request):
+        requiredvalues=Content.objects.all().values("forum","postid","posted_by","title","contentvalue","comments","likes")
+        requiredvalues=[{"forum":Forums.objects.get(forumid=i["forum"]).forum_name,
+        "posted_by":User.objects.get(id=i["posted_by"]).username,"postid":i["postid"],"title":i["title"],"content":i["contentvalue"],"comments_count"
+        :len(i["comments"]),"likes":i["likes"]
+        } for i in requiredvalues]
+        return Response(requiredvalues)
+        
+        
+
+
     def post(self,request):
         # _mutable=request.data._mutable
         # request.data._mutable=True
@@ -124,19 +152,69 @@ class PostView(APIView):
                     serialized_data.save(posted_by=request.user,forum=forum)
                     return Response("Sucessfully saved")
         
-        return Response("Sucessfully saved")
+        return Response("Some Error occured")
 
 class Joinedforums(APIView):
     renderer_classes=[UserRenderer]
     permission_classes=[IsAuthenticated]
     def get(self,request):
-        print(request.user)
         objectval=UserProfile.objects.get(user_instance=request.user)
+        
         if objectval.joined_forums!=None:
             return Response(objectval.joined_forums)
         else:
             return Response([""])
 
 
+class JoinedforumsView(APIView):
+    renderer_classes=[UserRenderer]
+    permission_classes=[IsAuthenticated]
+    def get(self,request):
+        forumslist=UserProfile.objects.get(user_instance=request.user).joined_forums
+        finallist=[Forums.objects.get(forum_name=i) for i in forumslist]
+       
+        
+
+        if forumslist!=None:
+            return Response(ForumsSerializer(finallist,many=True).data)
+        else:
+            return Response([""])
+
+class AddCommentView(APIView):
+    renderer_classes=[UserRenderer]
+    permission_classes=[IsAuthenticated]
+    def post(self,request,pk):
+        objectall=Content.objects.get(postid=pk)
+        username=objectall.posted_by.username
+        objectall.comments.append([request.user.username,request.data["comment"]])
+        objectall.save()
+        serializeddata=UUIDEncoder(objectall.__dict__)
+        serializeddata["comments"]=get_profile_image_for_comment(serializeddata["comments"])
+        serializeddata.update({"username":username})
+
+        return Response(serializeddata)
+
+class GetMyPostsViews(APIView):
+    renderer_classes=[UserRenderer]
+    permission_classes=[IsAuthenticated]
+    def get(self,request):
+        requiredvalues=Content.objects.filter(posted_by=request.user).values("forum","postid","title","contentvalue","comments","likes")
+        requiredvalues=[{"forum":Forums.objects.get(forumid=i["forum"]).forum_name,"postid":str(i["postid"]),"title":i["title"],"content":i["contentvalue"],"comments_count"
+        :len(i["comments"]),"likes":i["likes"]
+        } for i in requiredvalues]
+        return Response(requiredvalues)
 
 
+class ForumDetailsView(APIView):
+    def get(self,request,pk):
+        forumobj=Forums.objects.get(forumid=pk)
+        noticesobj=[popstate(i.__dict__) for i in Notice.objects.filter(notice_for=forumobj)]
+        postsobj=[popstate(i.__dict__) for i in Content.objects.filter(forum=forumobj)]
+
+        finalobj={
+            "forumdetails":popstate(forumobj.__dict__),
+            "notices":noticesobj,
+            "postobj":postsobj,
+        }
+
+        return Response(finalobj)

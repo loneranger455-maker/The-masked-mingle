@@ -21,7 +21,7 @@ class UserAuthenticationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("password must be at least 8 characters long")
         return value
         
-    def create(selfs,validated_data):
+    def create(self,validated_data):
         return User.objects.create_user(**validated_data)
 
 class LoginAuthenticateSerializer(serializers.ModelSerializer):
@@ -66,15 +66,15 @@ class ForumsSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 class NoticeSerializer(serializers.ModelSerializer):
+    forumname=serializers.CharField(max_length=200)
     class  Meta:
         model=Notice
-        fields='__all__'
+        fields=['forumname','notice_data']
 
 class PostsSerializer(serializers.ModelSerializer):
     class  Meta:
         model=Content
         fields='__all__'
         depth=1
-
 
 
