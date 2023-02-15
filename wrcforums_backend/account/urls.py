@@ -16,7 +16,7 @@ urlpatterns=[
     path('alljoinedforums/',JoinedforumsView.as_view()),
     
     path('forumdetails/<uuid:pk>/',ForumDetailsView.as_view()),
-
+    path('createforums/',ForumDetailsView.as_view()),
 
     path('allposts/',GetPostsView.as_view()),
 

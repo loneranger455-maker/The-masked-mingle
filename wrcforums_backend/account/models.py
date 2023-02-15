@@ -93,7 +93,7 @@ class Forums(models.Model):
 
 class UserProfile(models.Model):
     user_instance=models.OneToOneField(User,on_delete=models.CASCADE)
-    joined_forums=ArrayField(models.CharField(max_length=100),null=True)
+    joined_forums=ArrayField(models.CharField(max_length=100),default=list)
     user_profile_picture=models.ImageField(upload_to="profile_pictures/",default='profile_pictures/user-profile-icon.png')
     recent_interactions=ArrayField(ArrayField(models.CharField(max_length=200),size=2,null=True),null=True)
 

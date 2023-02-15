@@ -218,3 +218,9 @@ class ForumDetailsView(APIView):
         }
 
         return Response(finalobj)
+    
+    def post(self,request):
+        serializeddata=ForumsSerializer(data=request.data)
+        if serializeddata.is_valid(raise_exception=True):
+            serializeddata.save({"admin":request.user})
+        return JsonResponse({"msg","Forums created successfully"})
