@@ -77,6 +77,8 @@ class User(AbstractBaseUser):
 class Notifications(models.Model):
     notification_for=models.ForeignKey(User, on_delete=models.CASCADE,default=None)
     notification_data=models.CharField(max_length=100,default=None)
+    seen=models.BooleanField(default=False)
+    notify_time=models.DateTimeField(auto_now_add=True)
 
 
 class Forums(models.Model):
@@ -119,4 +121,9 @@ class Content(Posts):
     post_type=models.CharField(max_length=200,blank=True)
     def __str__(self):
         return str(self.postid)
+
+
+
+
+
 

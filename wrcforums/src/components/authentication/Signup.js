@@ -7,13 +7,10 @@ import { StoreToken } from '../../services/Localstorageservice'
 function Signup() {
     const navigate=useNavigate()
     const [errors,setError]=useState({})
-    
-
   
     const handlesubmit=(e)=>{
       e.preventDefault()
         const formdata=new FormData(e.target)
-        console.log(formdata)
         axios.post('http://localhost:8000/api/user/auth/',formdata).then((resp)=>{
         if(resp.data.errors){
           console.log(resp.data.errors)

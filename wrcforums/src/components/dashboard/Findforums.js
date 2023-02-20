@@ -1,34 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
 import {AiFillLock} from 'react-icons/ai'
 import {AiFillUnlock} from 'react-icons/ai'
+import axios from 'axios'
+import { GetToken } from '../../services/Localstorageservice'
+
+import { Link } from 'react-router-dom'
 
 function Noticerightbar(){
-    const values=["WRC Bctians","Share Bazar","Pokhara","Lamachaur","Bikes in Nepal"]
-    return(
-      <div className=' absolute top-[10rem] right-10 h-[25rem] w-[20rem] bg-[var(--secondarycolor)]'>
-        <div className='p-5 flex flex-col gap-4'>
-        
-        <div className="flex items-center p-2.5 border-2 border-gray-300 rounded shadow">
-    <input id="unchecked-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-    <label for="checked-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Show open forums only</label>
-</div>
-<div className='flex items-center p-2.5 border-2 border-gray-300 rounded shadow'>
-    <div>
-    <h1>Filter by</h1>
-    <p className='text-sm'>Members</p>
-    </div>
     
-    <div className='flex w-10 justify-between'>
-
-    </div>
     
-
-</div>
   
-        </div>
+
+
+    return(
+      <div className=' absolute top-[15rem] right-10 flex flex-col gap-10 h-[25rem] w-[18rem] '>
+            <Link to='/dashboard/createforum/'><button  className='w-[12rem] bg-slate-200 p-5 rounded-lg border-2 border-slate-300 hover:bg-slate-300'>Create a forum</button></Link> 
+            <Link to='/dashboard/forums/'><button className='w-[12rem] bg-slate-200  p-5  rounded-lg border-2 border-slate-300 hover:bg-slate-300'>View my forums</button></Link>
+            <Link to='/dashboard/forums/myforums'><button className='w-[12rem] bg-slate-200  p-5  rounded-lg border-2 border-slate-300 hover:bg-slate-300'>View joined forums</button></Link>
+      
         
       </div>
     )
@@ -36,12 +28,33 @@ function Noticerightbar(){
   
 
 function Findforums() {
-    const forums=[
-        {title:"Wrc Bctians",description:"Lets discuss bct guys of all batches.Welcome to the community",members:232,open:true},
-        {title:"Lamachaur",description:"Guys living in lamachaur are welcome",members:122,open:false},
-        {title:"TU Students",description:"We welcome all the TU students across Nepal to our forums",members:"1.1k",open:true}
-]
-const navigate=useNavigate()
+    const navigate=useNavigate()
+    var[forums,setForums]=useState([])
+    const [refresh,setRefresh]=useState()
+    let {access}=GetToken()
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/api/user/allforums/',{headers:{
+            "authorization":`Bearer ${access}`
+          }}).then((response)=>{
+        console.log(response)
+        setForums(response.data)
+        
+          }
+          )
+          .catch((err)=>console.log(err))
+        
+    },[refresh])
+
+    const joinForums=(id)=>{
+        axios.get('http://127.0.0.1:8000/api/user/joinforum/'+id,{headers:{
+            "authorization":`Bearer ${access}`
+          }}).then((response)=>{
+        console.log(response)
+        setRefresh("refr")
+          }
+          )
+          .catch((err)=>console.log(err))
+    }
   return (
     <div className="flex">
         <Sidebar value='findforums'/>
@@ -64,17 +77,17 @@ const navigate=useNavigate()
 </form>
 
       
-        <div className='flex flex-col m-8 max-w-xl gap-4 overflow-scroll h-[28rem]'>
-{
+        <div className='flex flex-col m-10 mt-12 max-w-xl gap-4 overflow-scroll h-[28rem]' >
+{forums.length>0?
     forums.map((value,index)=>(
-        <div key={index} class="flex bg-white shadow-lg w-full h-[60%] gap-4 ">
-        <div>
-            <img src={require('../../assets/demo.png')} alt='demo' className='h-2/3'/>
+        <div key={index} class="flex bg-white shadow-lg w-full h-[60%] gap-4 " >
+        <div className='h-[8rem] rounded-full' onClick={()=>navigate(`/dashboard/forums/${value.forumid}`)}>
+            <img src={'http://127.0.0.1:8000/'+value.image} alt='demo' className='h-2/3'/>
         </div>
         <div className='flex flex-col relative '>
-            <div className='flex'>
-            <h1 className='font-extrabold'>{value.title} </h1>
-            {value.open?
+            <div className='flex' onClick={()=>navigate(`/dashboard/forums/${value.forumid}`)} >
+            <h1 className='font-extrabold'>{value.forum_name} </h1>
+            {value.privacy==="public"?
             <p className='text-blue-900'> <AiFillUnlock/></p>:
             <p className='text-red-900'> <AiFillLock/></p>
             }
@@ -84,8 +97,8 @@ const navigate=useNavigate()
             <div className='absolute bottom-4 flex  justify-between w-[27rem]'>
                 <h3 className='font-light text-sm  text-blue-900'>{value.members} members</h3>
                 <div>
-                    <button className='bg-white  shadow-xl flex text-sm'>
-                        {value.open?<p className='bg-[var(--primarycolor)] px-2 py-0.5 rounded'>Join</p>:<p className='bg-red-800 text-white px-2 py-1 rounded'>Request to join</p>}
+                    <button className=' bg-white  shadow-xl flex text-sm'>
+                        {value.privacy==="public"?<p className='bg-[var(--primarycolor)] px-2 py-0.5 rounded' onClick={()=>joinForums(value.forumid)}>Join</p>:<p className='bg-red-800 text-white px-2 py-1 rounded'>Request to join</p>}
                         </button>
                 </div>
             </div>
@@ -93,6 +106,7 @@ const navigate=useNavigate()
 
 </div>
     ))
+:"no forums to show at the moment"
 }
       </div>
 <Noticerightbar/>

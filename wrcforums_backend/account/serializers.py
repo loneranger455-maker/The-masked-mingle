@@ -61,9 +61,15 @@ class NotificationsSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 class ForumsSerializer(serializers.ModelSerializer):
+    forumid=serializers.UUIDField(read_only=True)
+    members=serializers.IntegerField(read_only=True)
     class  Meta:
         model=Forums
-        fields='__all__'
+        fields=['forumid','members','forum_name','image','privacy','description']
+    def create(self,validated_data):
+            forum=Forums(**validated_data)
+            forum.save()
+            return forum
 
 class NoticeSerializer(serializers.ModelSerializer):
     forumname=serializers.CharField(max_length=200)

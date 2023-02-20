@@ -1,3 +1,5 @@
+import jwt_decode from "jwt-decode";
+
 const StoreToken=(value)=>{
     if (value){
         const {access,refresh}=value
@@ -24,4 +26,11 @@ const DeleteToken=()=>{
        
     
         }
-export {StoreToken,GetToken,DeleteToken}
+
+const GetUserId=()=>{
+    const {access}=GetToken()
+    const decode =jwt_decode(access)
+    return decode.user_id
+
+}
+export {StoreToken,GetToken,DeleteToken,GetUserId}

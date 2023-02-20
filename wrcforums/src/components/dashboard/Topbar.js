@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 function Topbar() {
   
   return (
-    <div className='flex width-screen sticky top-0 '>
+    <div className='flex width-screen top-0 '>
          <div className='w-[3rem] h-[3rem] flex ml-10 pt-4'>
             <img src={require('../../assets/logo2.png')} alt='logo'/>
             <p className='font-extrabold text-xl ml-4 mt-1'>StuForum</p>

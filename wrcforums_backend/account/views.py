@@ -22,13 +22,12 @@ def get_tokens_for_user(user):
 class UserAuthenticationViews(APIView):
     renderer_classes=[UserRenderer]
     def get(self,request):
-        return Response({"msg":"dats is fetched"})
+        return Response({"msg":"data is fetched"})
     def post(self,request):
         
         serializeddata=UserAuthenticationSerializer(data=request.data)
         if serializeddata.is_valid(raise_exception=True):
             user=serializeddata.save()
-
             token=get_tokens_for_user(user)
             Notifications(notification_for=user,notification_data=" Welcome to our community.Hope you like it here.").save()
             return Response({"token":token,"msg":"registration completed sucessfully"},status=status.HTTP_201_CREATED)
@@ -56,9 +55,9 @@ class LoginAuthenticationViews(APIView):
                     
                     return Response({"token":token,"username":user.username,"msg":"user registration sucessfull"},status=status.HTTP_200_OK)
                 else:
-                    return Response({"errors":{"password":["Password is incorrect"]}},status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"errors":{"password":"Password is incorrect"}},status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"errors":{"email":["User with this email doesn't exists"]}},status=status.HTTP_400_BAD_REQUEST)
+                return Response({"errors":{"email":"User with this email doesn't exists"}},status=status.HTTP_400_BAD_REQUEST)
         return Response(serializeddata.errors,status=status.HTTP_400_BAD_REQUEST)
     
 class UserDetailsView(APIView):
@@ -172,9 +171,6 @@ class JoinedforumsView(APIView):
     def get(self,request):
         forumslist=UserProfile.objects.get(user_instance=request.user).joined_forums
         finallist=[Forums.objects.get(forum_name=i) for i in forumslist]
-       
-        
-
         if forumslist!=None:
             return Response(ForumsSerializer(finallist,many=True).data)
         else:
@@ -220,7 +216,39 @@ class ForumDetailsView(APIView):
         return Response(finalobj)
     
     def post(self,request):
-        serializeddata=ForumsSerializer(data=request.data)
+        serializeddata=ForumsSerializer(data=request.data)        
         if serializeddata.is_valid(raise_exception=True):
-            serializeddata.save({"admin":request.user})
-        return JsonResponse({"msg","Forums created successfully"})
+            serializeddata.save(admin=request.user)
+        return Response({"msg","Forums created successfully"})
+
+class MyForums(APIView):
+    renderer_classes=[UserRenderer]
+    permission_classes=[IsAuthenticated]
+    def get(self,request):
+        myforums=Forums.objects.filter(admin=request.user)
+        serializeddata=ForumsSerializer(myforums,many=True)
+        return Response(serializeddata.data)
+
+class AllForums(APIView):
+    renderer_classes=[UserRenderer]
+    permission_classes=[IsAuthenticated]
+    def get(self,request):
+        allforums=Forums.objects.exclude(admin=request.user)
+        forumslist=UserProfile.objects.get(user_instance=request.user).joined_forums
+        finallist=[i for i in allforums if i.forum_name not in forumslist]
+        serializeddata=ForumsSerializer(finallist,many=True)
+        return Response(serializeddata.data)
+        
+
+class Joinforumviews(APIView):
+    renderer_classes=[UserRenderer]
+    permission_classes=[IsAuthenticated]
+    def get(sef,request,pk):
+        forum_val=Forums.objects.get(forumid=pk)
+        forum_val.members+=1
+        forum_val.save()
+        forum=UserProfile.objects.get(user_instance=request.user)
+        forum.joined_forums.append(forum_val.forum_name)
+        forum.save()
+        respnse=AllForums().get(request).data
+        return Response(respnse)
