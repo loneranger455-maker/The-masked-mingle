@@ -21,7 +21,7 @@ function Dashboard(props) {
     
     <div className="flex">
       <Sidebar value="home"/>
-      <div className="w-4/5  ">
+      <div className="w-4/5 bg-[var(--mycolor)]  ">
         <Topbar />
         
         <nav className="flex w-[60%]  justify-between px-20 pb-5 mt-8  ">

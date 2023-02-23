@@ -33,7 +33,7 @@ function Recent() {
 
 <div class="flex " onClick={()=>navigate(`posts/${value.postid}`)} >
 
-<div class="block w-[35rem] ml-[5rem] rounded-lg bg-white  shadow-lg hover:bg-[var(--secondarycolor)] cursor-default">
+<div class="block w-[35rem] ml-[5rem] rounded-lg bg-[var(--mycolor2)] shadow-lg hover:bg-[var(--secondarycolor)] cursor-default">
   <div key={index} class="p-6">
     <p className='text-xs'>{value.forum}</p>
     <h5 class="mb-2 text-xl font-bold text-gray-900">{value.title}</h5>

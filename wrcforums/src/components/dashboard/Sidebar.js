@@ -20,7 +20,7 @@ function Sidebar(props) {
   
   return (
     <div className='w-1/5 h-screen '>
-<div className='w-1/5 h-screen  fixed bg-[#1AEBB6] shadow-xl mix-blend-multiply hover:mix-blend-overlay" shadow-black'>
+<div className='w-1/5 h-screen  fixed  shadow-xl mix-blend-multiply hover:mix-blend-overlay" shadow-black'>
            
             <div className='flex flex-col justify-center items-center pt-8'>
                 <div>

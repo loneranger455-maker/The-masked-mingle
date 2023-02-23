@@ -20,7 +20,7 @@ function Notice() {
       .catch((err)=>console.log(err))
   },[])
   return (
-    <div className="shadow-xl w-[20rem] h-[14rem] rounded bg-blue-200 fixed right-8 text-black">
+    <div className="shadow-xl w-[20rem] h-[14rem] rounded bg-white fixed right-8 text-black">
       <div className="flex flex-col gap-4 justify-center items-center">
         <div className='flex justify-center'>
         <p className="font-extrabold text-blue-900">Notices</p>  </div>

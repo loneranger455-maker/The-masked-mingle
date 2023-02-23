@@ -47,14 +47,17 @@ axios.post('http://127.0.0.1:8000/api/user/addcomment/'+props.id+"/",formdata,{h
 function Comments(props){
   const user_id=GetUserId()
   return(
-    <div class="max-w-lg rounded-lg shadow-md relative shadow-blue-600/50">
-      <div className='flex '>
-        <div className='bg-[#DC143C] p-1'>        <img className='w-[5rem] rounded-full' src={`http://127.0.0.1:8000/media/${props.comment[2]}`}/>
+    <div class="max-w-lg rounded-lg relative">
+      <div className='flex gap-2'>
+        <div className=' p-1 '>     
+           <img className='w-[3rem] rounded-full' src={`http://127.0.0.1:8000/media/${props.comment[2]}`}/>
+           
+
 </div>
-        <div className='flex flex-col w-3/4 py-2 px-4'>
-              <p className='text-blue-700 font-bold'>{props.comment[0]}</p>
-              <p >{props.comment[1]}</p>
-              {user_id==props.user_id?<p className='absolute right-2'><AiFillDelete/></p>:""}
+        <div className='flex  flex-col gap-1 w-full py-2 px-4 bg-[#F0F2F5] rounded-xl'>
+        <p className='text-black font-medium rounded text-lg'>{props.comment[0]}</p>
+              <p className='text-md text-slate-800' >{props.comment[1]}</p>
+              {user_id==props.user_id?<p className='absolute right-4 top-4'><AiFillDelete/></p>:""}
         </div>
       
       </div>
