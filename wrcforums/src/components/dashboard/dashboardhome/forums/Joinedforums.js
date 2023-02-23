@@ -33,16 +33,18 @@ function Joinedforums() {
     forums.map((value,index)=>(
         <div key={index} class="flex bg-white shadow-lg w-full p-4 py-6 gap-4 " onClick={()=>navigate(`/dashboard/forums/${value.forumid}`)}>
         <div >
-            <img src={`http://127.0.0.1:8000/${value.image}`} className='h-[6rem] rounded-full'/>
+            <img src={`http://127.0.0.1:8000/${value.image}`} className='h-[4rem] rounded-full'/>
         </div>
         <div className='flex flex-col relative'>
             <h1 className='font-extrabold'>{value.forum_name}</h1>
-            <h3 className='font-light text-md'>{value.description}</h3>
-            <div className='absolute bottom-4 flex  justify-between w-[27rem]'>
-            <h3 className='font-light text-sm text-blue-900'>{value.members} members</h3>
-            <div>
-                    <button className=' text-sm  rounded-lg  shadow-xl flex '><IoExit/> <span className='relative bottom-0.5'> Leave</span></button>
+            <div className='w-[70%] ' >
+            <p className='font-light max-h-[4.3rem] text-md text-ellipsis overflow-hidden ...'>{value.description}</p>
             </div>
+            <h3 className='font-light text-sm text-blue-900'>{value.members} members</h3>
+            <div className='absolute bottom-4 flex  justify-end w-[27rem]'>
+            
+                    <button className=' text-sm  rounded-lg  shadow-xl flex '><IoExit/> <span className='relative bottom-0.5'> Leave</span></button>
+          
 
             </div>
             

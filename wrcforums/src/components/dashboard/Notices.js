@@ -40,15 +40,15 @@ function Notices() {
         <Topbar/>
         <div className='mt-8 max-w-4xl ml-[5rem] overflow-scroll h-[33rem] '>
           <div className='w-2/3'>
-          <p className='font-extrabold text-blue-900 text-center'>Notices</p>
+          <p className='font-extrabold text-blue-900 text-center border-2 border-[var(--mycolor)] p-2 rounded-full'>Notices</p>
           <div className='flex flex-col gap-8 mt-8 items-center'>
 
             {noticesbox.map((noticebox,index)=>(
-                <div className="w-full px-6 h-max" key={index}>
+                <div className="w-full px-6 h-max rounded border-2 border-[var(--mycolor)]" key={index}>
                     <p className='font-extrabold px-4'>{noticebox.forum}</p>
                     <p className='px-4'>{noticebox.notice}</p>
                     <a href={noticebox.link} target='_blank' className='px-4 text-blue-900'> {noticebox.link}</a>
-                    <div className='border-2 flex justify-between px-8'>
+                    <div className='flex justify-between px-8'>
                      <span className='flex text-blue-800'><BiLike/> <span className='text-sm'>{noticebox.like}</span></span> {noticebox.posted}
                     </div>
                 </div>
