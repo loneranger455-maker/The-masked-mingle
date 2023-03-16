@@ -64,9 +64,7 @@ class UserDetailsView(APIView):
     renderer_classes=[UserRenderer]
     permission_classes=[IsAuthenticated]
     def get(self,request):
-        print(request.user.username)
         serializer=UserDetailsSerializer(request.user)
-        print(serializer.data)
         return Response(serializer.data)
 
 class ChangePasswordView(APIView):
@@ -252,3 +250,5 @@ class Joinforumviews(APIView):
         forum.save()
         respnse=AllForums().get(request).data
         return Response(respnse)
+
+    
