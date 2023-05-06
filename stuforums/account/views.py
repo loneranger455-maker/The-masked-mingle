@@ -217,6 +217,9 @@ class ForumDetailsView(APIView):
         serializeddata=ForumsSerializer(data=request.data)        
         if serializeddata.is_valid(raise_exception=True):
             serializeddata.save(admin=request.user)
+            forum=UserProfile.objects.get(user_instance=request.user)
+            forum.joined_forums.append(request.data["forum_name"])
+            forum.save()
         return Response({"msg","Forums created successfully"})
 
 class MyForums(APIView):

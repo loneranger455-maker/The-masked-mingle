@@ -92,8 +92,8 @@ AUTH_USER_MODEL='account.User'
 DATABASES = {  
     'default': {  
         'ENGINE': 'django.db.backends.postgresql',  
-        'NAME': 'wrcforumsdb',  
-        'USER': 'loneranger',  
+        'NAME': 'forum_db',  
+        'USER': 'postgres',  
         'PASSWORD': '',  
         'HOST': '127.0.0.1',  
         'PORT': '5432',  
