@@ -13,7 +13,7 @@ a social platform or community where individuals can interact and communicate wh
 
 
 
-## Tech Stack
+### Tech Stack
 
 **Client:** React, Redux-Toolkit, TailwindCSS
 
