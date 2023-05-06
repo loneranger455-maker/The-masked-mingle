@@ -1,7 +1,7 @@
 ## The Masked Mingle
 a social platform or community where individuals can interact and communicate while keeping their identity anonymous. 
 
-##Features of "The Masked Mingle":
+### Features of "The Masked Mingle":
 1. Create post in joined forums including sharing links and selecting post types
 2. Search forums and join new forums
 3. Create private and public forums
