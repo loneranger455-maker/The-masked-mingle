@@ -1,7 +1,7 @@
 # The Masked Mingle
 The Masked Mingle is a unique online platform where people can interact and communicate with others while keeping their identities a secret.
 
-# What You Can Do on The Masked Mingle
+## What You Can Do on The Masked Mingle
 ### Create Posts: 
 You can write and share your thoughts in different discussion groups. You can even include links and choose different types of posts.
 
